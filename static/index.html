@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sauti ya Mwananchi</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar" aria-label="Service status">
+        <div>
+          <p class="eyebrow">TukoKadi Civic Agent</p>
+          <h1>Sauti ya Mwananchi</h1>
+        </div>
+        <div class="status-grid">
+          <span>Neutral</span>
+          <span>Sources Required</span>
+          <span>No ID Storage</span>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <section class="chat-panel" aria-label="Msaidizi chat">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Msaidizi</p>
+              <h2>Citizen Channel</h2>
+            </div>
+            <select id="quickPrompt" aria-label="Quick prompt">
+              <option value="">Quick prompt</option>
+              <option value="Ni haki gani ninazopata siku ya uchaguzi?">Voting rights</option>
+              <option value="Wapi nipigie kura Kangemi?">Polling centre</option>
+              <option value="Is it true that you need a party card to vote?">Fact-check</option>
+              <option value="Mambo, niaje kupiga kura first time?">First-time voter</option>
+            </select>
+          </div>
+
+          <div id="messages" class="messages" aria-live="polite">
+            <article class="bubble agent">
+              <strong>Msaidizi</strong>
+              <p>Karibu. Ask a civic question in English, Kiswahili, or Sheng.</p>
+            </article>
+          </div>
+
+          <form id="chatForm" class="composer">
+            <input id="chatInput" autocomplete="off" placeholder="Type a civic question..." required>
+            <button type="submit">Send</button>
+          </form>
+        </section>
+
+        <aside class="tool-panel" aria-label="Agent tools">
+          <section class="tool-block">
+            <div class="panel-head compact">
+              <div>
+                <p class="eyebrow">Kiongozi</p>
+                <h2>Polling Lookup</h2>
+              </div>
+            </div>
+            <form id="lookupForm" class="stack-form">
+              <input id="lookupInput" placeholder="Ward, constituency, or centre" value="Kangemi" required>
+              <button type="submit">Find</button>
+            </form>
+            <pre id="lookupOutput" class="output"></pre>
+          </section>
+
+          <section class="tool-block">
+            <div class="panel-head compact">
+              <div>
+                <p class="eyebrow">Ukweli</p>
+                <h2>Claim Check</h2>
+              </div>
+            </div>
+            <form id="factForm" class="stack-form">
+              <input id="factInput" placeholder="Paste a claim" value="Voting is compulsory in Kenya" required>
+              <button type="submit">Check</button>
+            </form>
+            <pre id="factOutput" class="output"></pre>
+          </section>
+
+          <section class="tool-block">
+            <div class="panel-head compact">
+              <div>
+                <p class="eyebrow">Mwenza</p>
+                <h2>USSD Preview</h2>
+              </div>
+            </div>
+            <div class="ussd-keys" aria-label="USSD menu choices">
+              <button data-ussd="">Menu</button>
+              <button data-ussd="1">1</button>
+              <button data-ussd="2">2</button>
+              <button data-ussd="3">3</button>
+              <button data-ussd="4">4</button>
+            </div>
+            <pre id="ussdOutput" class="output"></pre>
+          </section>
+        </aside>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

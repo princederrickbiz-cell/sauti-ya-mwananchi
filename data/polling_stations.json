@@ -1,0 +1,44 @@
+[
+  {
+    "county": "Nairobi",
+    "constituency": "Westlands",
+    "ward": "Parklands/Highridge",
+    "station": "Parklands Primary School"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Westlands",
+    "ward": "Kangemi",
+    "station": "Kangemi Primary School"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Embakasi East",
+    "ward": "Umoja I",
+    "station": "Umoja Primary School"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Starehe",
+    "ward": "Nairobi Central",
+    "station": "Moi Avenue Primary School"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Kibra",
+    "ward": "Laini Saba",
+    "station": "Olympic Primary School"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Roysambu",
+    "ward": "Zimmerman",
+    "station": "Zimmerman Primary School"
+  },
+  {
+    "county": "Nairobi",
+    "constituency": "Dagoretti North",
+    "ward": "Kilimani",
+    "station": "Kilimani Primary School"
+  }
+]
