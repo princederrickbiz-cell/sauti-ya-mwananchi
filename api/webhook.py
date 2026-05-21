@@ -3,7 +3,14 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from agents.africastalking_client import send_sms
+from agents.africastalking_client import send_sms, send_whatsapp, send_message
+from agents.message_queue import (
+    add_to_queue,
+    process_queue,
+    get_queue_status,
+    clear_queue,
+    load_queue_from_file,
+)
 from agents.msaidizi import route
 from agents.mwenza import handle_ussd
 from agents.settings import ROOT_DIR
@@ -23,6 +30,18 @@ class UssdRequest(BaseModel):
     session_id: str = "demo-session"
     phone: str = "+254700000000"
     text: str = ""
+
+
+class BulkMessageRequest(BaseModel):
+    recipients: list[str]
+    message: str
+    channel: str = "sms"
+
+
+class ChannelMessageRequest(BaseModel):
+    phone: str
+    message: str
+    channel: str = "sms"
 
 
 @app.get("/")
@@ -100,3 +119,60 @@ def africastalking_ussd(
     text: str = Form(""),
 ):
     return handle_ussd(session_id=sessionId, phone=phoneNumber, text=text)
+
+
+# Direct SMS/WhatsApp endpoints with channel support
+@app.post("/send-sms")
+def send_sms_endpoint(payload: MessageRequest):
+    """Send SMS directly (requires Africa's Talking credentials)."""
+    result = send_sms(to=payload.phone, message=payload.message)
+    return result
+
+
+@app.post("/send-whatsapp")
+def send_whatsapp_endpoint(payload: MessageRequest):
+    """Send WhatsApp message directly (requires Africa's Talking credentials)."""
+    result = send_whatsapp(to=payload.phone, message=payload.message)
+    return result
+
+
+@app.post("/send-message")
+def send_message_endpoint(payload: ChannelMessageRequest):
+    """Send message via SMS or WhatsApp (channel: 'sms' or 'whatsapp')."""
+    result = send_message(to=payload.phone, message=payload.message, channel=payload.channel)
+    return result
+
+
+# Bulk messaging and queue management endpoints
+@app.post("/bulk-message/add")
+def bulk_message_add(payload: BulkMessageRequest):
+    """Add messages to queue for bulk sending."""
+    return add_to_queue(
+        recipients=payload.recipients,
+        message=payload.message,
+        channel=payload.channel,
+    )
+
+
+@app.post("/bulk-message/process")
+def bulk_message_process(max_items: int = None):
+    """Process pending messages in queue."""
+    return process_queue(max_items=max_items)
+
+
+@app.get("/bulk-message/status")
+def bulk_message_status():
+    """Get status of message queue."""
+    return get_queue_status()
+
+
+@app.post("/bulk-message/clear")
+def bulk_message_clear():
+    """Clear all pending messages from queue."""
+    return clear_queue()
+
+
+@app.post("/bulk-message/load")
+def bulk_message_load():
+    """Load pending messages from file."""
+    return load_queue_from_file()
