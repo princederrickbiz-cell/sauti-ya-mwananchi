@@ -1,4 +1,5 @@
 from agents.llm import generate
+from agents.rag import context_block
 from agents.sources import source_block
 
 
@@ -25,6 +26,9 @@ def answer(question, lang="auto"):
 
 Approved sources:
 {source_block()}
+
+Relevant retrieved source snippets:
+{context_block(question)}
 
 User language hint: {lang}
 Question: {question}

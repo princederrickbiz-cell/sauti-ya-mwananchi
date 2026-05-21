@@ -10,6 +10,10 @@ const lookupOutput = document.querySelector("#lookupOutput");
 const factForm = document.querySelector("#factForm");
 const factInput = document.querySelector("#factInput");
 const factOutput = document.querySelector("#factOutput");
+const imageForm = document.querySelector("#imageForm");
+const imageHint = document.querySelector("#imageHint");
+const imageInput = document.querySelector("#imageInput");
+const imageOutput = document.querySelector("#imageOutput");
 const ussdOutput = document.querySelector("#ussdOutput");
 
 function addMessage(role, text, isError = false) {
@@ -91,6 +95,30 @@ factForm.addEventListener("submit", async (event) => {
     factOutput.textContent = data.reply;
   } catch (error) {
     factOutput.textContent = "Fact-check failed. Check the server terminal.";
+  }
+});
+
+imageForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const file = imageInput.files[0];
+  if (!file) {
+    return;
+  }
+
+  imageOutput.textContent = "Checking image...";
+  const body = new FormData();
+  body.append("claim_hint", imageHint.value.trim());
+  body.append("image", file);
+
+  try {
+    const response = await fetch("/fact-check/image", {
+      method: "POST",
+      body,
+    });
+    const data = await response.json();
+    imageOutput.textContent = data.reply;
+  } catch (error) {
+    imageOutput.textContent = "Image check failed. Check the server terminal.";
   }
 });
 

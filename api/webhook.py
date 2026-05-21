@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Form
+from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -7,6 +7,7 @@ from agents.africastalking_client import send_sms
 from agents.msaidizi import route
 from agents.mwenza import handle_ussd
 from agents.settings import ROOT_DIR
+from agents.vision import check_image
 
 
 app = FastAPI(title="Sauti ya Mwananchi")
@@ -34,9 +35,41 @@ def health():
     return {"status": "ok", "service": "Sauti ya Mwananchi"}
 
 
+@app.get("/about")
+def about():
+    return {
+        "service": "Sauti ya Mwananchi",
+        "agents": ["Msaidizi", "Mwalimu", "Kiongozi", "Ukweli", "Mwenza"],
+        "data_source": "IEBC public registration-centre page exported to data/polling_stations.csv",
+        "guardrails": [
+            "politically neutral",
+            "cite trusted civic sources",
+            "return Unverified when unsupported",
+            "do not store voter ID data",
+        ],
+    }
+
+
 @app.post("/message")
 def message(payload: MessageRequest):
     return {"reply": route(phone=payload.phone, message=payload.message)}
+
+
+@app.post("/fact-check/image")
+async def fact_check_image(
+    image: UploadFile = File(...),
+    claim_hint: str = Form(""),
+):
+    image_bytes = await image.read()
+    return {
+        "filename": image.filename,
+        "mime_type": image.content_type,
+        "reply": check_image(
+            image_bytes=image_bytes,
+            mime_type=image.content_type or "",
+            claim_hint=claim_hint,
+        ),
+    }
 
 
 @app.post("/ussd")

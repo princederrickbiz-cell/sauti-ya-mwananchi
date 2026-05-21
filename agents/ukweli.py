@@ -1,4 +1,5 @@
 from agents.llm import generate
+from agents.rag import context_block
 from agents.sources import source_block
 
 
@@ -46,6 +47,9 @@ Guardrails:
 
 Approved sources:
 {source_block()}
+
+Relevant retrieved source snippets:
+{context_block(claim)}
 
 User language hint: {lang}
 Claim to check: {claim}

@@ -81,6 +81,21 @@
           <section class="tool-block">
             <div class="panel-head compact">
               <div>
+                <p class="eyebrow">Gemini Vision</p>
+                <h2>Image Check</h2>
+              </div>
+            </div>
+            <form id="imageForm" class="image-form">
+              <input id="imageHint" placeholder="Optional hint, e.g. election poster">
+              <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" required>
+              <button type="submit">Upload</button>
+            </form>
+            <pre id="imageOutput" class="output"></pre>
+          </section>
+
+          <section class="tool-block">
+            <div class="panel-head compact">
+              <div>
                 <p class="eyebrow">Mwenza</p>
                 <h2>USSD Preview</h2>
               </div>

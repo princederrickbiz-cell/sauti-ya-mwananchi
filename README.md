@@ -7,7 +7,7 @@ It uses a simple multi-agent structure:
 - `Msaidizi`: orchestrator for SMS/WhatsApp-style messages
 - `Mwalimu`: civic educator using approved source snippets
 - `Kiongozi`: IEBC registration/polling centre helper using public registration-centre data
-- `Ukweli`: misinformation checker that can return `Unverified`
+- `Ukweli`: text and image misinformation checker that can return `Unverified`
 - `Mwenza`: USSD election-day companion
 
 ## Step 1: Add Your Gemini Credentials
@@ -59,7 +59,13 @@ Is it true that you need a party card to vote?
 Wapi nipigie kura Westlands?
 ```
 
-## Step 5: Run The Webhook Server
+## Step 5: Run Tests
+
+```bash
+python -m unittest
+```
+
+## Step 6: Run The Webhook Server
 
 ```bash
 python main.py
@@ -75,6 +81,12 @@ API health check:
 
 ```text
 http://127.0.0.1:8000/health
+```
+
+Service metadata:
+
+```text
+http://127.0.0.1:8000/about
 ```
 
 API test:
@@ -96,6 +108,24 @@ Africa's Talking USSD webhook:
 ```text
 POST http://localhost:8000/africastalking/ussd
 ```
+
+Image fact-check endpoint:
+
+```bash
+curl -X POST http://localhost:8000/fact-check/image \
+  -F "claim_hint=Check this election poster" \
+  -F "image=@poster.png"
+```
+
+## RAG Sources
+
+Trusted civic source notes live in:
+
+```text
+docs/
+```
+
+The local RAG layer indexes `.md` and `.txt` files from that folder plus built-in source snippets. Add official Constitution, IEBC, and Elections Act excerpts there as plain text or Markdown. Keep source titles clear so answers can cite them.
 
 If port `8000` is busy:
 
@@ -230,6 +260,8 @@ http://127.0.0.1:8080/
 Deploy manually to Cloud Run:
 
 ```bash
+gcloud auth login
+gcloud config set project YOUR_GCP_PROJECT_ID
 gcloud run deploy sauti-ya-mwananchi \
   --source . \
   --region us-central1 \
@@ -248,10 +280,15 @@ AFRICASTALKING_SENDER_ID
 
 Do not commit `.env`.
 
+If you prefer Cloud Build:
+
+```bash
+gcloud builds submit --config cloudbuild.yaml .
+```
+
 ## Next Improvements
 
 - Replace `data/polling_stations.csv` with official IEBC polling-station data.
 - Add RAG ingestion for Constitution, IEBC, and Elections Act documents.
-- Add image upload support for `Ukweli` using Gemini Vision.
-- Connect `/message` to WhatsApp/SMS through Africa's Talking.
+- Add richer official source documents for the RAG layer.
 - Deploy the FastAPI app to Cloud Run.
